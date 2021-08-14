@@ -1,0 +1,14 @@
+{% extends 'articles/base.html' %}
+{% block content %}
+    <h1>Articles List</h1>
+    <div class="articles">
+        {% for article in object_list %}
+            <div class="article">
+                <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
+                <p>Published {{ article.publish }} by {{ article.author.get_full_name }}</p>
+                <p>{{ article.body | truncatewords:10 }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% include 'articles/pagination.html' with page=page_obj %}
+{% endblock %}

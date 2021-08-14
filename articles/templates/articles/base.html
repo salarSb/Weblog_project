@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>My Blog: {% block title %}{{ page_title }}{% endblock %}</title>
+</head>
+<body>
+<header>
+    <h2><a href="{% url 'articles:articles-list' %}">Logo</a></h2>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li>
+                    <a href="{% url 'accounts:logout' %}">Logout</a>
+                </li>
+                <li>
+                    <a class="highlight" href="{% url 'articles:create-article' %}">Create New Article</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'accounts:login' %}">Login</a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:signup' %}">SignUp</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
+<div class="wrapper">
+    {% block content %}{% endblock %}
+</div>
+</body>
+{% block page_scripts %}{% endblock %}
+</html>
