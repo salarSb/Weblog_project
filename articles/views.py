@@ -9,14 +9,18 @@ from articles.models import Article
 class ArticleListView(ListView):
     model = Article
     queryset = Article.objects.published_articles()
-    paginate_by = 6
+    paginate_by = 3
     extra_context = {
         'page_title': 'Articles'
     }
 
 
 def article_detail(request, year, month, day, article):
-    post = get_object_or_404(Article, slug=article, status='PUBLISHED', publish__year=year, publish__month=month,
+    post = get_object_or_404(Article,
+                             slug=article,
+                             status='PUBLISHED',
+                             publish__year=year,
+                             publish__month=month,
                              publish__day=day)
     return render(request, 'articles/article_detail.html', {'object': post, 'page_title': post.title})
 

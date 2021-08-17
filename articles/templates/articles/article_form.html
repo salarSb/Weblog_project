@@ -1,7 +1,7 @@
 {% extends 'articles/base.html' %}
 {% load static %}
 {% block content %}
-    <div class="create-article">
+    <div>
         <h1>Create Your Article</h1>
         <form method="POST" class="site-form" enctype="multipart/form-data">
             {% csrf_token %}

@@ -3,35 +3,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.css' %}">
+    <link rel="stylesheet" href="{% static 'css/blog_list.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
     <title>My Blog: {% block title %}{{ page_title }}{% endblock %}</title>
 </head>
 <body>
-<header>
-    <h2><a href="{% url 'articles:articles-list' %}">Logo</a></h2>
-    <nav>
-        <ul>
+<header class="header-area overlay mb-2">
+    <nav class="navbar navbar-expand-md navbar-dark">
+        <div class="container">
             {% if user.is_authenticated %}
-                <li>
-                    <a href="{% url 'accounts:logout' %}">Logout</a>
-                </li>
-                <li>
-                    <a class="highlight" href="{% url 'articles:create-article' %}">Create New Article</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% url 'accounts:login' %}">Login</a>
-                </li>
-                <li>
-                    <a href="{% url 'accounts:signup' %}">SignUp</a>
-                </li>
+                <a href="#" class="navbar-brand">{{ request.user.get_full_name }}</a>
             {% endif %}
-        </ul>
+            <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#main-nav">
+                <span class="menu-icon-bar"></span>
+                <span class="menu-icon-bar"></span>
+                <span class="menu-icon-bar"></span>
+            </button>
+            <div id="main-nav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    <li><a href="{% url 'articles:articles-list' %}" class="nav-item nav-link active">Articles</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'articles:create-article' %}" class="nav-item nav-link">Create Article</a>
+                        </li>
+                        <li><a href="{% url 'accounts:logout' %}" class="nav-item nav-link">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'accounts:login' %}" class="nav-item nav-link">Login</a></li>
+                        <li><a href="{% url 'accounts:signup' %}" class="nav-item nav-link">Signup</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
 </header>
-<div class="wrapper">
-    {% block content %}{% endblock %}
-</div>
+{% block content %}{% endblock %}
 </body>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
 {% block page_scripts %}{% endblock %}
 </html>
