@@ -1,9 +1,25 @@
 {% extends 'articles/base.html' %}
+{% load static %}
+{% block page_links %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 {% block content %}
-    <h1>Login</h1>
-    <form method="POST" class="site-form">
+    <form method="POST">
         {% csrf_token %}
-        {{ form }}
-        <button>Login</button>
+        <div class="login-div">
+            <div class="logo"></div>
+            <div class="title">Login to access your dashboard</div>
+            <div class="fields">
+                <div class="username">
+                    <i class="fa fa-user svg-icon"></i>
+                    <input type="text" name="username" id="id_username" class="user-input" placeholder="Username">
+                </div>
+                <div class="password">
+                    <i class="fa fa-lock svg-icon"></i>
+                    <input type="password" name="password" id="id_password" class="pass-input" placeholder="Password">
+                </div>
+            </div>
+            <button class="signin-button">Submit</button>
+        </div>
     </form>
 {% endblock %}

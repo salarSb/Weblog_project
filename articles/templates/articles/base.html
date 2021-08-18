@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/all.css' %}">
     <link rel="stylesheet" href="{% static 'css/blog_list.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    {% block page_links %}{% endblock %}
     <title>My Blog: {% block title %}{{ page_title }}{% endblock %}</title>
 </head>
 <body>

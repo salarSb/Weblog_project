@@ -20,7 +20,6 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', context)
 
 
-
 class Login(LoginView):
     extra_context = {
         'page_title': 'Login'
