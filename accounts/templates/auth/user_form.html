@@ -1,0 +1,31 @@
+{% extends 'articles/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Edit your profile</h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_first_name">Name</label>
+                        {% render_field form.first_name class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_last_name">Last Name</label>
+                        {% render_field form.last_name class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_email">Email</label>
+                        {% render_field form.email class="form-control" %}
+                    </div>
+                    <div>
+                        <button type="submit" value="Submit"
+                                class="btn btn-outline-success btn-sm">Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
