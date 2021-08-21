@@ -1,0 +1,36 @@
+{% extends 'articles/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                {% if sent %}
+                    <h1>E-mail successfully sent</h1>
+                    <p>"{{ article.title }}" was successfully sent to {{ form.cleaned_data.to }}.</p>
+                {% else %}
+                    <h1>Share "{{ article.title }}" by e-mail</h1>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_name">Name</label>
+                            {% render_field form.name class="form-control" %}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_to">To</label>
+                            {% render_field form.to class="form-control" %}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_comments">Comments</label>
+                            {% render_field form.comments class="form-control" %}
+                        </div>
+                        <div>
+                            <button type="submit" value="Submit"
+                                    class="btn btn-outline-success btn-sm">Send E-mail
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
