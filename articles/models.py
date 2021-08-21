@@ -21,6 +21,7 @@ class Article(models.Model):
     updated = models.DateTimeField(auto_now=True)
     image = models.ImageField()
     status = models.CharField(max_length=10, choices=ArticleStatuses.choices, default=ArticleStatuses.DRAFT)
+    likes = models.IntegerField(default=0)
     objects = PublishedManager()
 
     class Meta:
@@ -32,3 +33,19 @@ class Article(models.Model):
     def get_absolute_url(self):
         return reverse_lazy('articles:article-detail',
                             args=[self.publish.year, self.publish.month, self.publish.day, self.slug])
+
+
+class Comment(models.Model):
+    article = models.ForeignKey('Article', on_delete=models.CASCADE, related_name='comments')
+    name = models.CharField(max_length=80)
+    email = models.EmailField()
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('created',)
+
+    def __str__(self):
+        return f'commented by {self.name} on {self.article}'

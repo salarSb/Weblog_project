@@ -1,4 +1,5 @@
 {% extends 'articles/base.html' %}
+{% load static %}
 {% block content %}
     <div id="main-content" class="blog-page">
         <div class="container">
@@ -23,8 +24,11 @@
                                 </div>
                                 <ul class="stats">
                                     <li><a href="javascript:void(0);">General</a></li>
-                                    <li><a href="javascript:void(0);" class="fa fa-heart">28</a></li>
-                                    <li><a href="javascript:void(0);" class="fa fa-comment">128</a></li>
+                                    <li><a class="fa fa-heart like-btn"
+                                           data-article-id="{{ article.id }}"><span
+                                            id="like-count-{{ article.id }}">{{ article.likes }}</span></a></li>
+                                    <li><a href="{{ article.get_absolute_url }}"
+                                           class="fa fa-comment">{{ article.comments.count }}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -140,7 +144,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+{% endblock %}
+{% block page_scripts %}
+    <script src="{% static 'js/like.js' %}"></script>
 {% endblock %}
