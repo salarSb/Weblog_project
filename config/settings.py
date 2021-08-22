@@ -32,6 +32,8 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'articles:articles-list'
 LOGOUT_REDIRECT_URL = 'articles:articles-list'
 
+SITE_ID = 1
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,9 +43,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
     'articles.apps.BlogConfig',
     'accounts.apps.AccountsConfig',
+    'widget_tweaks',
+    'taggit',
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
@@ -81,8 +86,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'blog_database',
+        'USER': 'usr_blog',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 

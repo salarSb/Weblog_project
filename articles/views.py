@@ -1,23 +1,40 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView
+from taggit.models import Tag
 
 from articles.forms import EmailPostForm, CommentForm
 from articles.models import Article
 
 
-class ArticleListView(ListView):
-    model = Article
-    queryset = Article.objects.published_articles()
-    paginate_by = 3
-    extra_context = {
-        'page_title': 'Articles'
-    }
+def article_list(request, tag_slug=None):
+    object_list = Article.objects.published_articles()
+    tags = Tag.objects.all()
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
+    paginator = Paginator(object_list, 3)  # 3 articles in each page
+    page = request.GET.get('page')
+    try:
+        articles = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer deliver the first page
+        articles = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range deliver last page of results
+        articles = paginator.page(paginator.num_pages)
+    return render(request, 'articles/article_list.html', {'page': page,
+                                                          'articles': articles,
+                                                          'tag': tag,
+                                                          'tags': tags})
 
 
 def article_detail(request, year, month, day, article):
@@ -39,9 +56,13 @@ def article_detail(request, year, month, day, article):
             new_comment.save()
     else:
         comment_form = CommentForm()
+    # List of similar articles
+    article_tags_ids = article.tags.values_list('id', flat=True)
+    similar_articles = Article.objects.published_articles().filter(tags__in=article_tags_ids).exclude(id=article.id)
+    similar_articles = similar_articles.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
     return render(request, 'articles/article_detail.html',
                   {'object': article, 'page_title': article.title, 'comments': comments, 'new_comment': new_comment,
-                   'comment_form': comment_form})
+                   'comment_form': comment_form, 'similar_articles': similar_articles})
 
 
 class CreateArticleView(LoginRequiredMixin, CreateView):

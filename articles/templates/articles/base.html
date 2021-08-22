@@ -25,6 +25,8 @@
             <div id="main-nav" class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li><a href="{% url 'articles:articles-list' %}" class="nav-item nav-link active">Articles</a></li>
+                    <li><a href="{% url 'articles:article-feed' %}" class="nav-item nav-link active">Subscribe to my RSS
+                        feed</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'articles:create-article' %}" class="nav-item nav-link">Create Article</a>
                         </li>

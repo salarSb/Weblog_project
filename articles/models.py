@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 from articles.enums import ArticleStatuses
 
@@ -23,6 +24,7 @@ class Article(models.Model):
     status = models.CharField(max_length=10, choices=ArticleStatuses.choices, default=ArticleStatuses.DRAFT)
     likes = models.IntegerField(default=0)
     objects = PublishedManager()
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('-publish',)
