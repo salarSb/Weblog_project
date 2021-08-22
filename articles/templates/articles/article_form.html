@@ -1,15 +1,47 @@
 {% extends 'articles/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% block content %}
-    <div>
-        <h1>Create Your Article</h1>
-        <form method="POST" class="site-form" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form }}
-            <button>Submit</button>
-        </form>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Create Your Article</h1>
+                <form method="POST" class="site-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_title">Title</label>
+                        {% render_field form.title class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_slug">Slug</label>
+                        {% render_field form.slug class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_body">Body</label>
+                        {% render_field form.body class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_publish">Publish</label>
+                        {% render_field form.publish class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_image">Image</label>
+                        {% render_field form.image class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_status">Status</label>
+                        {% render_field form.status class='form-control' %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_tags">Tags</label>
+                        {% render_field form.tags class='form-control' %}
+                    </div>
+                    <button class="btn btn-outline-success">Submit</button>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block page_scripts %}
-    <script src="{% static 'js/slugify.js'%}"></script>
+    <script src="{% static 'js/slugify.js' %}"></script>
 {% endblock %}

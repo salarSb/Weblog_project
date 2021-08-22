@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count
@@ -10,7 +11,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import CreateView
 from taggit.models import Tag
 
-from articles.forms import EmailPostForm, CommentForm
+from articles.forms import EmailPostForm, CommentForm, SearchForm
 from articles.models import Article
 
 
@@ -60,14 +61,18 @@ def article_detail(request, year, month, day, article):
     article_tags_ids = article.tags.values_list('id', flat=True)
     similar_articles = Article.objects.published_articles().filter(tags__in=article_tags_ids).exclude(id=article.id)
     similar_articles = similar_articles.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
-    return render(request, 'articles/article_detail.html',
-                  {'object': article, 'page_title': article.title, 'comments': comments, 'new_comment': new_comment,
-                   'comment_form': comment_form, 'similar_articles': similar_articles})
+    context = {'object': article,
+               'page_title': article.title,
+               'comments': comments,
+               'new_comment': new_comment,
+               'comment_form': comment_form,
+               'similar_articles': similar_articles}
+    return render(request, 'articles/article_detail.html', context)
 
 
 class CreateArticleView(LoginRequiredMixin, CreateView):
     model = Article
-    fields = ('title', 'slug', 'body', 'image', 'status')
+    fields = ('title', 'slug', 'body', 'publish', 'image', 'status', 'tags')
     success_url = reverse_lazy('articles:articles-list')
     extra_context = {
         'page_title': 'Create Article'
@@ -104,3 +109,23 @@ def post_like(request, article_id):
     article.likes += 1
     article.save()
     return JsonResponse({'success': True, 'likes': article.likes}, status=201)
+
+
+def article_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
+            results = Article.objects.published_articles() \
+                .annotate(rank=SearchRank(search_vector, search_query)) \
+                .filter(rank__gte=0.3).order_by('-rank')
+    context = {'form': form,
+               'query': query,
+               'results': results,
+               'page_title': 'Search'}
+    return render(request, 'articles/search.html', context)

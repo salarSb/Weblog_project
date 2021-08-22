@@ -1,5 +1,6 @@
 {% extends 'articles/base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 {% load articles_tags %}
 {% block content %}
     <div id="main-content" class="blog-page">
@@ -38,13 +39,11 @@
                 </div>
                 <div class="col-lg-4 col-md-12 right-box">
                     <div class="card">
-                        <div class="body search">
-                            <div class="input-group m-b-0">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-search"></i></span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="Search...">
-                            </div>
+                        <div class="header">
+                            <h3>Click on the search icon to search through articles</h3>
+                            <a href="{% url 'articles:article-search' %}" class="input-group-text"
+                               style="text-decoration: none"><i
+                                    class="fa fa-search"></i></a>
                         </div>
                     </div>
                     <div class="card">
