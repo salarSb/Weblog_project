@@ -4,3 +4,4 @@ django-widget-tweaks
 django_taggit
 markdown
 psycopg2-binary
+python-decouple
